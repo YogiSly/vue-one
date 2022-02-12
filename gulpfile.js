@@ -34,7 +34,7 @@ gulp.task("watch", () => {
   gulp.watch("./app/api/**/*.*", gulp.parallel('copy-api'))
   gulp.watch("./app/assets/**/*.*", gulp.parallel('copy-assets'))
   gulp.watch("./app/src/**/*.js", gulp.parallel('build-js')) 
-  gulp.watch("./app/src/**/*.scss", gulp.parallel('build-sass')) 
+  gulp.watch("./app/scss/**/*.scss", gulp.parallel('build-sass')) 
 })
 gulp.task("build", gulp.parallel('copy-html','copy-api','copy-assets','build-js','build-sass'))
 gulp.task("default", gulp.parallel('watch','build'))

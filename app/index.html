@@ -15,9 +15,9 @@
     <input type="text" v-model="newPageName">
     <button id="create-file" v-on:click="createPage">Создать</button>
     <button id="delete-file">Удалить</button>
-    <span>{{newPageName}}</span>
-    <div v-for="page in pageList">
-      <h1>{{ page }}</h1>
+    <div v-for="(page,index) in pageList" :key="index">
+      <span>{{ index + 1 }}.</span>
+      <h1>{{ page }}<a href="#" @click="deletePage(page)">[X]</a></h1>
     </div>
   </div>
   <script defer src="bundle.js"></script>

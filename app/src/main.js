@@ -10,14 +10,18 @@ new Vue({
   },
   methods: {
     createPage() {
-      axios.post("./api/createNewHtmlPage.php", {"name": this.newPageName}).then(response => console.log(response));
-      console.log(this.newPageName);
+      axios.post("./api/createNewHtmlPage.php",  {'name': this.newPageName}).then(response => this.updatePageList());
+    },
+    updatePageList() {
+      axios.get("./api/").then((response) => {
+        this.pageList = response.data;
+      });
+    },
+    deletePage(page){
+      axios.post("./api/deletePage.php",  {'name': page}).then(response => this.updatePageList());
     }
   },
   created() {
-    axios.get("./api/").then((response) => {
-        this.pageList = response.data;
-        
-      }).catch(console.log(this.data))
+    this.updatePageList()
   }
-});
+})
