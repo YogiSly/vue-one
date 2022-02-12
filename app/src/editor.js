@@ -1,3 +1,6 @@
+const axios = require("axios")
+const DOMHelper = require("./dom-helper")
+
 require("./iframe-load")
 
 module.exports = class Editor {
@@ -5,27 +8,38 @@ module.exports = class Editor {
     this.iframe = document.querySelector("iframe")
   }
   open(page) {
-  this.iframe.load("../" + page, ()=> {
-    const body = this.iframe.contentDocument.body
-    let textNodes = []
-    function recurcy(element) {
-      element.childNodes.forEach((node) => {
+    this.currentPage = page
 
-        if (node.nodeName === "#text" && node.nodeValue.replace(/\s+/g,"")) {
-          textNodes.push(node)
-        } else {
-          recurcy(node)
-        }
+    axios
+      .get("../" + page)
+      .then((res)=>DOMHelper.parseStrToDom(res.data))
+      .then(DOMHelper.wrapTextNodes)
+      .then((dom) => {
+        DOMHelper.virtualDom = dom
+        return dom
       })
-    }
-    recurcy(body)
-    textNodes.forEach((node) => {
-      const wrapper = this.iframe.contentDocument.createElement("text-editor")
-      node.parentNode.replaceChild(wrapper, node)
-      wrapper.appendChild(node)
-      wrapper.contentEditable = "true"
-    })
-  })
+      .then(DOMHelper.serializeDomToStr)
+      .then((html) => axios.post("./api/saveTempPage.php",{html}))
+      .then(()=> this.iframe.load("../temp.html"))
+      .then(()=> this.enableEditing())
   }
-
+ 
+  enableEditing() {
+    this.iframe.contentDocument.body.querySelectorAll("text-editor").forEach((element) => {
+      element.contentEditable = "true"
+      element.addEventListener("input", () => {
+        this.onTextEdit(element)
+      })
+    })
+  }
+  onTextEdit(element) {
+    const id = element.getAttribute("nodeid")
+    DOMHelper.virtualDom.body.querySelector(`[nodeid="${id}"]`).innerHTML = element.innerHTML
+  }
+  save() {
+    const newDom = DOMHelper.virtualDom.cloneNode(DOMHelper.virtualDom)
+    DOMHelper.unwrapTextNodes(newDom)
+    const html = DOMHelper.serializeDomToStr(newDom)
+    axios.post("./api/savePage.php", {pageName: this.currentPage, html})
+  }
 }
