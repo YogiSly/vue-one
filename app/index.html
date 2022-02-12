@@ -11,15 +11,7 @@
 </head>
 
 <body>
-  <div id="app">
-    <input type="text" v-model="newPageName">
-    <button id="create-file" v-on:click="createPage">Создать</button>
-    <button id="delete-file">Удалить</button>
-    <div v-for="(page,index) in pageList" :key="index">
-      <span>{{ index + 1 }}.</span>
-      <h1>{{ page }}<a href="#" @click="deletePage(page)">[X]</a></h1>
-    </div>
-  </div>
+  <iframe src="" frameborder="0"></iframe>
   <script defer src="bundle.js"></script>
 </body>
 
