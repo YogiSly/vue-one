@@ -1,7 +1,7 @@
 module.exports = class DOMHelper {
   static parseStrToDom(str) {
     const parser = new DOMParser()
-    return parser.parseFromString(str, "application/xml")
+    return parser.parseFromString(str, "text/html")
   }
   static serializeDomToStr(dom) {
     const serializer = new XMLSerializer()
@@ -28,7 +28,6 @@ module.exports = class DOMHelper {
       wrapper.contentEditable = "true"
       wrapper.setAttribute("nodeid",i)
     })
-    console.log(dom)
     return dom
   }
   static unwrapTextNodes(dom) {
