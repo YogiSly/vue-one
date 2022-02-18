@@ -14,7 +14,12 @@ new Vue ({
     page: "index.html",
     showLoader: true,
     pageList:[],
-    backupList: []
+    backupList: [],
+    meta: {
+      title: "",
+      keywords: "",
+      description: ""
+    }
   },
   methods: {
     onBtnSave() {
@@ -36,6 +41,7 @@ new Vue ({
       this.showLoader = true
       window.editor.open(page, () => {
         this.showLoader = false
+        this.meta = window.editor.metaEditor.getMeta()
       })
     },
     loadBackupList() {
@@ -60,12 +66,13 @@ new Vue ({
           this.showLoader = false
         })
       })
+    },
+    applyMeta() {
+      window.editor.metaEditor.setMeta(this.meta.title, this.meta.keywords, this.meta.description)
     }
   },
   created() {
-    window.editor.open(this.page, () => {
-      this.showLoader = false
-    })
+    this.openPage(this.page)
     axios
       .get("./api/pageList.php")
       .then((res) => {

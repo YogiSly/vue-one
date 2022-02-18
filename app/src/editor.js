@@ -1,6 +1,7 @@
 const axios = require("axios")
 const DOMHelper = require("./dom-helper")
 const EditorText = require("./editor-text")
+const EditorMeta = require("./editor-meta")
 
 require("./iframe-load")
 
@@ -33,8 +34,8 @@ module.exports = class Editor {
       const id = element.getAttribute("nodeid")
       const virtualElement = DOMHelper.virtualDom.body.querySelector(`[nodeid="${id}"]`)
       new EditorText(element, virtualElement)
-
     })
+    this.metaEditor = new EditorMeta(DOMHelper.virtualDom)
   }
   injectStyles() {
     const style = this.iframe.contentDocument.createElement("style")
