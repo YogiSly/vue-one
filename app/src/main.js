@@ -8,7 +8,7 @@ window.editor = new Editor()
 
 
 
-new Vue ({
+window.vue = new Vue ({
   el: "#app",
   data: {
     page: "index.html",
@@ -69,6 +69,15 @@ new Vue ({
     },
     applyMeta() {
       window.editor.metaEditor.setMeta(this.meta.title, this.meta.keywords, this.meta.description)
+    },
+    enableLoader() {
+      this.showLoader = true
+    },
+    disableLoader() {
+      this.showLoader = false
+    },
+    errorNotification(msg) {
+      UIkit.notification({message: msg, status: 'danger'})
     }
   },
   created() {
@@ -77,7 +86,7 @@ new Vue ({
       .get("./api/pageList.php")
       .then((res) => {
         this.pageList = res.data
-        console.log(this.pageList)
+        //console.log(this.pageList)
       })
     this.loadBackupList()    
   } 
