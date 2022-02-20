@@ -65,9 +65,7 @@ window.vue = new Vue ({
         return axios.post("./api/restoreBackup.php", { "page": this.page, "file": backup.file })
       })
       .then(()=> {
-        window.editor.open(this.page, () => {
-          this.showLoader = false
-        })
+        this.openPage(this.page)
       })
     },
     applyMeta() {
